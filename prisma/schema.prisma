@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  userId   Int      @id @default(autoincrement())
+  username String   @unique
+  password String   @unique
+  role     String?
+  Course   Course[]
+}
+
+model Course {
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String
+  duration     String
+  outcome      String
+  Collection   Collection? @relation(fields: [collectionId], references: [id])
+  User         User?       @relation(fields: [userId], references: [userId])
+  collectionId Int?
+  userId       Int?
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+model Collection {
+  id      Int      @id @default(autoincrement())
+  name    String
+  courses Course[]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_SHADOW_URL")
+}
